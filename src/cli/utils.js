@@ -38,13 +38,13 @@ function getAPICtl (apiAddr) {
   return APIctl(apiAddr)
 }
 
-exports.getNodeOrAPI = (argv) => {
+exports.getNodeOrAPI = (argv, stateOptions = {forceInitialized: true}) => {
   log('get node or api async')
   if (argv.api || isDaemonOn()) {
     return Promise.resolve(getAPICtl(argv.api))
   }
 
-  return IPFS.createReadyNodePromise({
+  return IPFS.createNodePromise({
     repo: exports.getRepoPath(),
     init: false,
     start: false,
@@ -52,7 +52,7 @@ exports.getNodeOrAPI = (argv) => {
     EXPERIMENTAL: {
       pubsub: true
     }
-  })
+  }, stateOptions)
 }
 
 exports.getRepoPath = () => {
